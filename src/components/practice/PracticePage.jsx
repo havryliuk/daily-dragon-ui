@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Box, Button, Input, List, Spinner, Text, VStack, HStack, Heading,
+    Box, Button, Input, Spinner, Text, VStack, HStack, Heading,
     DialogRoot, DialogContent, DialogHeader,
     DialogBody, DialogFooter, DialogTitle, DialogActionTrigger
 } from "@chakra-ui/react";
@@ -73,6 +73,11 @@ export function PracticePage({onReview}) {
         else doSubmit();
     };
 
+    const handleConfirmSubmit = () => {
+        setConfirmOpen(false);
+        doSubmit();
+    };
+
     if (gettingSentences) {
         return (
             <VStack
@@ -120,7 +125,7 @@ export function PracticePage({onReview}) {
                         <Input
                             placeholder="Your Chinese translation..."
                             value={translations[index]}
-                            onChange={(e} => handleInputChange(index, e.target.value)}
+                            onChange={(e) => handleInputChange(index, e.target.value)}
                             size="md"
                             mt={1}
                         />
@@ -153,7 +158,7 @@ export function PracticePage({onReview}) {
                         <DialogActionTrigger asChild>
                             <Button variant="outline">Go back</Button>
                         </DialogActionTrigger>
-                        <Button colorPalette="blue" onClick={() => { setConfirmOpen(false); doSubmit(); }}>Submit</Button>
+                        <Button colorPalette="blue" onClick={handleConfirmSubmit}>Submit</Button>
                     </DialogFooter>
                 </DialogContent>
             </DialogRoot>
