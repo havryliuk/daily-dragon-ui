@@ -1,20 +1,20 @@
-import {Button, VStack, Heading, Text, HStack} from "@chakra-ui/react";
+import {Button, VStack, Heading, Text, HStack, Box} from "@chakra-ui/react";
 import {useNavigate} from "react-router-dom";
-import {FiArrowLeft, FiZap} from "react-icons/fi";
+import {FiArrowLeft, FiZip} from "react-icons/fi";
 
 export default function WelcomePage({onStart}) {
     const navigate = useNavigate();
     return (
         <VStack gap={5} align="stretch">
-            <HStack justify="space-between" align="center">
+             <HStack justify="space-between" align="center">
                 <Button variant="ghost" size="sm" onClick={() => navigate("/")} colorPalette="blue">
                     <FiArrowLeft/> Home
                 </Button>
                 <HStack gap={2} align="center">
-                    <FiZap/>
+                    <FiZip/>
                     <Heading size="lg">Practice</Heading>
                 </HStack>
-                <!-- spacer so heading is centred -->
+                {/* spacer so heading is centred */}
                 <Box as="span" w="68px" />
             </HStack>
 
