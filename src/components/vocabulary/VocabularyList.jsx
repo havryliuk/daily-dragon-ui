@@ -61,6 +61,7 @@ export function VocabularyList({items, onDelete}) {
             {pageCount > 1 && (
                 <HStack mt={4} justify="center" gap={3} align="center">
                     <Button
+                        aria-label="Previous page"
                         variant="outline"
                         size="sm"
                         colorPalette="blue"
@@ -73,6 +74,7 @@ export function VocabularyList({items, onDelete}) {
                         {page + 1} / {pageCount}
                     </Text>
                     <Button
+                        aria-label="Next page"
                         variant="outline"
                         size="sm"
                         colorPalette="blue"
