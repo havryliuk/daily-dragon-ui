@@ -1,5 +1,5 @@
 import './App.css';
-import {Box} from "@chakra-ui/react";
+import {Box, Container} from "@chakra-ui/react";
 import '@aws-amplify/ui-react/styles.css';
 import {Route, Routes} from 'react-router-dom';
 import Home from './components/Home.jsx';
@@ -27,21 +27,21 @@ function App() {
                 console.error('Failed to fetch auth session:', error);
             }
         }
-
         getToken();
     }, []);
 
     return (
         <Authenticator signUpAttributes={["email"]}>
             {({signOut, user}) => (
-                <Box className="centered" p={4}>
+                <Box className="centered" minH="100vh" bg="gray.50">
                     <Header user={user} signOut={signOut}/>
-
-                    <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/vocabulary" element={<VocabularyPage/>}/>
-                        <Route path="/practice" element={<Practice/>}/>
-                    </Routes>
+                    <Container maxW="800px" width="100%" px={4} py={6}>
+                        <Routes>
+                            <Route path="/" element={<Home/>}/>
+                            <Route path="/vocabulary" element={<VocabularyPage/>}/>
+                            <Route path="/practice" element={<Practice/>}/>
+                        </Routes>
+                    </Container>
                 </Box>
             )}
         </Authenticator>
