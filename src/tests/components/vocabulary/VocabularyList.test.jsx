@@ -17,11 +17,11 @@ import {ChakraProvider, defaultSystem} from "@chakra-ui/react";
 test("renders all words in the list", () => {
     render(
         <ChakraProvider value={defaultSystem}>
-            <VocabularyList items={["你好", "$O�ׂ"]}/>
+            <VocabularyList items={["hello", "world"]}/>
         </ChakraProvider>
     );
-    expect(screen.getByText("你好")).toBeInTheDocument();
-    expect(screen.getByText("$O0Ԃ")).toBeInTheDocument();
+    expect(screen.getByText("hello")).toBeInTheDocument();
+    expect(screen.getByText("world")).toBeInTheDocument();
 });
 
 test("paginates long word lists", async () => {
