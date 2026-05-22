@@ -23,14 +23,14 @@ export default function Header({user, signOut}) {
                 <Box flex={1}/>
                 <Link to="/" style={{textDecoration: "none"}}>
                     <HStack gap={2} align="center">
-                        <Text fontSize="2xl">🐩</Text>
+                        <Text fontSize="2xl">Daily Dragon</Text>
                         <Heading
                             size="xl"
                             color="blue.600"
                             letterSpacing="wider"
                             fontWeight="bold"
                         >
-                            毫�_配
+                            Daily Dragon
                         </Heading>
                     </HStack>
                 </Link>
