@@ -8,7 +8,6 @@ export default function Home() {
     return (
         <VStack gap={8} align="center" mt={8}>
             <VStack gap={2} textAlign="center">
-                <Text fontSize="5xl">🐩</Text>
                 <Heading size="2xl" color="blue.600">Daily Dragon</Heading>
                 <Text color="gray.500" fontSize="md">
                     Your daily Chinese practice companion
@@ -31,9 +30,7 @@ export default function Home() {
                 >
                     <VStack gap={2} align="center">
                         <Text fontSize="3xl"><FiBook/></Text>
-                        <Text fontWeight="semibold" fontSize="md">
-                            Vocabulary
-                        </Text>
+                        <Text fontWeight="semibold" fontSize="md">Vocabulary</Text>
                         <Text fontSize="xs" color="gray.500" textAlign="center">
                             Manage your word list
                         </Text>
@@ -55,9 +52,7 @@ export default function Home() {
                 >
                     <VStack gap={2} align="center">
                         <Text fontSize="3xl"><FiZap/></Text>
-                        <Text fontWeight="semibold" fontSize="md">
-                            Practice
-                        </Text>
+                        <Text fontWeight="semibold" fontSize="md">Practice</Text>
                         <Text fontSize="xs" color="gray.500" textAlign="center">
                             Translate sentences
                         </Text>
