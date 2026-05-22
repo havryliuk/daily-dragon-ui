@@ -30,7 +30,7 @@ export default function Header({user, signOut}) {
                             letterSpacing="wider"
                             fontWeight="bold"
                         >
-                            Daily Dragon
+                            每日龙
                         </Heading>
                     </HStack>
                 </Link>
