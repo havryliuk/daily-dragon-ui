@@ -29,7 +29,6 @@ export function VocabularyList({items, onDelete}) {
                 borderWidth="1px"
                 borderColor="gray.100"
             >
-                <Text fontSize="3xl" mb={2}>💄</Text>
                 <Text fontSize="md">No words yet. Add your first word!</Text>
             </Box>
         );
@@ -68,7 +67,7 @@ export function VocabularyList({items, onDelete}) {
                         onClick={() => setPage(p => p - 1)}
                         disabled={page === 0}
                     >
-                        ◐
+                        Prev
                     </Button>
                     <Text fontSize="sm" color="gray.500">
                         {page + 1} / {pageCount}
@@ -81,7 +80,7 @@ export function VocabularyList({items, onDelete}) {
                         onClick={() => setPage(p => p + 1)}
                         disabled={page === pageCount - 1}
                     >
-                        ◒
+                        Next
                     </Button>
                 </HStack>
             )}
