@@ -1,4 +1,4 @@
-/* ¯Global reset & base */
+/* Global reset & base */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -29,7 +29,7 @@ html, body {
     padding: 0 1rem;
 }
 
-/* Aws Amplify auth ui overrides -- centre the auth card nicely */
+/* AWS Amplify auth ui overrides -- centre the auth card nicely */
 [data-amplify-authenticator] {
     min-height: 100vh;
     display: flex;
