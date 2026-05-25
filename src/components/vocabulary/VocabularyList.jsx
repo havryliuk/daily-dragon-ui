@@ -6,7 +6,6 @@ import {
     Text,
     Button,
     HStack,
-    Flex,
 } from "@chakra-ui/react";
 
 const PAGE_SIZE = 10;
@@ -18,72 +17,49 @@ export function VocabularyList({items, onDelete}) {
     const pageItems = items.slice(start, start + PAGE_SIZE);
     const pageCount = Math.ceil(items.length / PAGE_SIZE);
 
-    if (items.length === 0) {
-        return (
-            <Box
-                textAlign="center"
-                py={12}
-                color="gray.400"
-                bg="white"
-                borderRadius="xl"
-                borderWidth="1px"
-                borderColor="gray.100"
-            >
-                <Text fontSize="md">No words yet. Add your first word!</Text>
-            </Box>
-        );
-    }
-
     return (
         <>
-            <SimpleGrid columns={{base: 1, md: 2}} gap={3}>
+            <SimpleGrid columns={{base: 1, md: 2}} spacing={4}>
                 {pageItems.map((item, index) => (
-                    <Flex
+                    <Box
                         key={start + index}
-                        align="center"
-                        justify="space-between"
-                        px={4}
-                        py={3}
-                        bg="white"
-                        borderRadius="lg"
+                        p={4}
                         borderWidth="1px"
-                        borderColor="gray.100"
-                        _hover={{borderColor: "blue.200", boxShadow: "sm"}}
-                        transition="all 0.15s"
+                        borderRadius="md"
+                        textAlign="center"
+                        m={2}
                     >
-                        <Text fontSize="lg" fontWeight="medium">{item}</Text>
-                        <RemoveWordDialog word={item} onDelete={onDelete}/>
-                    </Flex>
+                        <Text>{item}</Text>
+                        <RemoveWordDialog
+                            word={item}
+                            onDelete={onDelete}
+                            style={{position: "absolute", top: 2, right: 2}}
+                        />
+                    </Box>
                 ))}
             </SimpleGrid>
 
-            {pageCount > 1 && (
-                <HStack mt={4} justify="center" gap={3} align="center">
-                    <Button
-                        aria-label="Previous page"
-                        variant="outline"
-                        size="sm"
-                        colorPalette="blue"
-                        onClick={() => setPage(p => p - 1)}
-                        disabled={page === 0}
-                    >
-                        Prev
-                    </Button>
-                    <Text fontSize="sm" color="gray.500">
-                        {page + 1} / {pageCount}
-                    </Text>
-                    <Button
-                        aria-label="Next page"
-                        variant="outline"
-                        size="sm"
-                        colorPalette="blue"
-                        onClick={() => setPage(p => p + 1)}
-                        disabled={page === pageCount - 1}
-                    >
-                        Next
-                    </Button>
-                </HStack>
-            )}
+            <HStack mt={4} justify="center">
+                <Button
+                    variant="ghost"
+                    onClick={() => setPage(p => p - 1)}
+                    disabled={page === 0}
+                >
+                    ◀
+                </Button>
+
+                <Text>
+                    {page + 1} / {pageCount}
+                </Text>
+
+                <Button
+                    variant="ghost"
+                    onClick={() => setPage(p => p + 1)}
+                    disabled={page === pageCount - 1}
+                >
+                    ▶
+                </Button>
+            </HStack>
         </>
     );
 }
