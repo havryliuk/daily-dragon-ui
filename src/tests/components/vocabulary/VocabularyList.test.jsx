@@ -33,15 +33,15 @@ test("paginates long word lists", async () => {
     );
 
     expect(screen.getByText("Word 1")).toBeInTheDocument();
-    expect(screen.getByText("Word 10")).toBeInTheDocument();
-    expect(screen.queryByText("Word 11")).not.toBeInTheDocument();
+    expect(screen.getByText("Word 12")).toBeInTheDocument();
+    expect(screen.queryByText("Word 13")).not.toBeInTheDocument();
 
     act(() => {
         const nextButton = screen.getByText("▶");
         nextButton.click();
     });
 
-    expect(await screen.getByText("Word 11")).toBeInTheDocument();
-    expect(screen.getByText("Word 20")).toBeInTheDocument();
-    expect(screen.queryByText("Word 21")).not.toBeInTheDocument();
+    expect(await screen.getByText("Word 13")).toBeInTheDocument();
+    expect(screen.getByText("Word 24")).toBeInTheDocument();
+    expect(screen.queryByText("Word 25")).not.toBeInTheDocument();
 });

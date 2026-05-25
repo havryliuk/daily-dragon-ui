@@ -22,7 +22,7 @@ export default ({review, onFinish, onPracticeAgain}) => {
 
     return (
         <VStack gap={6} align="stretch">
-            <HStack gap={8} p={5} bg="gray.50" borderRadius="lg" justify="center" flexWrap="wrap">
+            <HStack gap={8} p={5} bg="white" borderWidth="1px" borderColor="gray.200" borderRadius="xl" boxShadow="sm" justify="center" flexWrap="wrap">
                 <Stat.Root textAlign="center">
                     <Stat.Label>Average Score</Stat.Label>
                     <Stat.ValueText>{avg} <Text as="span" fontSize="sm" color="gray.500">/ 10</Text></Stat.ValueText>
@@ -41,7 +41,7 @@ export default ({review, onFinish, onPracticeAgain}) => {
 
             <SimpleGrid columns={{base: 1, md: 2}} gap={5}>
                 {review.map((r, i) => (
-                    <Card.Root key={i} borderRadius="lg" boxShadow="md">
+                    <Card.Root key={i} borderRadius="lg" boxShadow="sm" _hover={{boxShadow: "md"}} transition="all 0.15s">
                         <Card.Header>
                             <HStack justify="space-between" align="flex-start" gap={3}>
                                 <VStack align="flex-start" gap={1} flex={1}>
@@ -83,10 +83,12 @@ export default ({review, onFinish, onPracticeAgain}) => {
                                 <Text fontSize="sm">{r.userTranslation}</Text>
                             </Box>
 
-                            <Box p={2} bg="green.subtle" borderRadius="md">
-                                <Text fontSize="xs" color="green.fg" fontWeight="semibold" mb={1}>Correct sentence</Text>
-                                <Text fontSize="sm">{r.correctSentence}</Text>
-                            </Box>
+                            {r.correctSentence && (
+                                <Box p={2} bg="green.subtle" borderRadius="md">
+                                    <Text fontSize="xs" color="green.fg" fontWeight="semibold" mb={1}>Correct sentence</Text>
+                                    <Text fontSize="sm">{r.correctSentence}</Text>
+                                </Box>
+                            )}
 
                             <Alert.Root status={scoreAlertStatus(r.score)} size="sm" borderRadius="md">
                                 <Alert.Indicator/>
@@ -102,10 +104,10 @@ export default ({review, onFinish, onPracticeAgain}) => {
             </SimpleGrid>
 
             <HStack justify="center">
-                <Button colorPalette="blue" variant="subtle" onClick={onFinish}>
+                <Button colorPalette="teal" variant="subtle" onClick={onFinish}>
                     Finish Practice
                 </Button>
-                <Button colorPalette="blue" onClick={onPracticeAgain}>
+                <Button colorPalette="teal" onClick={onPracticeAgain}>
                     Practice Again
                 </Button>
             </HStack>

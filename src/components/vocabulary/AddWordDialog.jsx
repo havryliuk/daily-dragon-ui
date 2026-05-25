@@ -1,15 +1,13 @@
-import React from "react";
+import React, {useRef} from "react";
 
-import {Button, CloseButton, Dialog, Input, useDialogContext} from "@chakra-ui/react"
+import {Button, CloseButton, Dialog, Input} from "@chakra-ui/react"
 import {useState} from "react";
 import {addWord} from "../../services/vocabularyService.js";
 import {toaster} from "../ui/toaster.jsx";
 
 const WORD_MAX_LENGTH = 128;
 
-function AddWordDialogContent({setIsOpen, onAdd}) {
-    const dialog = useDialogContext();
-
+function AddWordDialogContent({setIsOpen, onAdd, inputRef}) {
     const [word, setWord] = useState("");
     const [adding, setAdding] = useState(false);
 
@@ -56,6 +54,7 @@ function AddWordDialogContent({setIsOpen, onAdd}) {
             </Dialog.Header>
             <Dialog.Body>
                 <Input
+                    ref={inputRef}
                     placeholder="Enter new word"
                     value={word}
                     onChange={e => setWord(e.target.value)}
@@ -64,7 +63,7 @@ function AddWordDialogContent({setIsOpen, onAdd}) {
             </Dialog.Body>
             <Dialog.Footer>
                 <Button
-                    colorScheme="blue"
+                    colorPalette="teal"
                     onClick={handleSave}
                     disabled={!word.trim() || adding}
                 >
@@ -77,20 +76,22 @@ function AddWordDialogContent({setIsOpen, onAdd}) {
 
 export function AddWordDialog({onAdd}) {
     const [isOpen, setIsOpen] = useState(false);
+    const inputRef = useRef(null);
 
     return (
         <Dialog.Root
             open={isOpen}
             onOpenChange={(details) => setIsOpen(details.open)}
             role="alertdialog"
+            initialFocusEl={() => inputRef.current}
         >
             <Dialog.Trigger asChild>
-                <Button variant="subtle" title="Add new word" mb={4}>Add word</Button>
+                <Button colorPalette="teal" variant="subtle" title="Add new word">Add word</Button>
             </Dialog.Trigger>
             <Dialog.Backdrop/>
             <Dialog.Positioner>
                 <Dialog.Content>
-                    <AddWordDialogContent setIsOpen={setIsOpen} onAdd={onAdd}/>
+                    <AddWordDialogContent setIsOpen={setIsOpen} onAdd={onAdd} inputRef={inputRef}/>
                 </Dialog.Content>
             </Dialog.Positioner>
         </Dialog.Root>

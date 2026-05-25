@@ -1,14 +1,8 @@
 import React, {useState} from "react";
 import {RemoveWordDialog} from "./RemoveWordDialog.jsx";
-import {
-    SimpleGrid,
-    Box,
-    Text,
-    Button,
-    HStack,
-} from "@chakra-ui/react";
+import {SimpleGrid, Box, Text, Button, HStack} from "@chakra-ui/react";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 12;
 
 export function VocabularyList({items, onDelete}) {
     const [page, setPage] = useState(0);
@@ -19,47 +13,52 @@ export function VocabularyList({items, onDelete}) {
 
     return (
         <>
-            <SimpleGrid columns={{base: 1, md: 2}} spacing={4}>
+            <SimpleGrid columns={{base: 2, md: 4}} gap={4}>
                 {pageItems.map((item, index) => (
                     <Box
                         key={start + index}
                         p={4}
+                        bg="white"
                         borderWidth="1px"
-                        borderRadius="md"
+                        borderColor="gray.200"
+                        borderRadius="lg"
+                        boxShadow="sm"
+                        _hover={{boxShadow: "md"}}
+                        transition="all 0.15s"
                         textAlign="center"
-                        m={2}
+                        position="relative"
                     >
-                        <Text>{item}</Text>
-                        <RemoveWordDialog
-                            word={item}
-                            onDelete={onDelete}
-                            style={{position: "absolute", top: 2, right: 2}}
-                        />
+                        <Text fontSize="2xl" fontWeight="bold" color="teal.700">{item}</Text>
+                        <Box position="absolute" top={2} right={2}>
+                            <RemoveWordDialog word={item} onDelete={onDelete}/>
+                        </Box>
                     </Box>
                 ))}
             </SimpleGrid>
 
-            <HStack mt={4} justify="center">
-                <Button
-                    variant="ghost"
-                    onClick={() => setPage(p => p - 1)}
-                    disabled={page === 0}
-                >
-                    ◀
-                </Button>
-
-                <Text>
-                    {page + 1} / {pageCount}
-                </Text>
-
-                <Button
-                    variant="ghost"
-                    onClick={() => setPage(p => p + 1)}
-                    disabled={page === pageCount - 1}
-                >
-                    ▶
-                </Button>
-            </HStack>
+            {pageCount > 1 && (
+                <HStack mt={6} justify="center">
+                    <Button
+                        variant="ghost"
+                        colorPalette="teal"
+                        onClick={() => setPage(p => p - 1)}
+                        disabled={page === 0}
+                    >
+                        ◀
+                    </Button>
+                    <Text fontSize="sm" color="gray.500" minW="80px" textAlign="center">
+                        {page + 1} / {pageCount}
+                    </Text>
+                    <Button
+                        variant="ghost"
+                        colorPalette="teal"
+                        onClick={() => setPage(p => p + 1)}
+                        disabled={page === pageCount - 1}
+                    >
+                        ▶
+                    </Button>
+                </HStack>
+            )}
         </>
     );
 }

@@ -1,12 +1,22 @@
 import React from 'react';
 import {
-    Box, Button, Input, List, Spinner, Text,
-    DialogRoot, DialogContent, DialogHeader,
+    Box, Button, Input, Spinner, Text, VStack,
+    DialogRoot, DialogBackdrop, DialogPositioner, DialogContent, DialogHeader,
     DialogBody, DialogFooter, DialogTitle, DialogActionTrigger
 } from "@chakra-ui/react";
 import {getDueVocabulary, submitReviews} from "../../services/vocabularyService.js";
 import {useState, useEffect} from "react";
 import {getPracticeSentences, submitTranslations} from "../../services/ai/aiService.js";
+
+function renderSentence(sentence) {
+    return sentence.split(/(<[^>]+>)/).map((part, i) => {
+        const match = part.match(/^<(.+)>$/);
+        if (match) {
+            return <Text as="span" key={i} color="teal.600" fontWeight="bold">{match[1]}</Text>;
+        }
+        return part;
+    });
+}
 
 export function PracticePage({onReview}) {
     const [gettingSentences, setGettingSentences] = useState(true);
@@ -83,33 +93,52 @@ export function PracticePage({onReview}) {
         }
     };
 
-    return (
-        <>
-            {gettingSentences ? (<>
-                <Text>Getting sentences for translation...</Text>
-                <Spinner/>
-            </>) : (<>
-                <Text>Translate the following sentences into Chinese using the correct translation of the underlined word.</Text>
-                <Box m="6px">
-                    <List.Root as="ol">
-                        {sentences.map((sentence, index) => (
-                            <List.Item key={index}>{sentence}
-                                <Input
-                                    value={translations[index]}
-                                    onChange={(e) => handleInputChange(index, e.target.value)}
-                                />
-                            </List.Item>
-                        ))}
-                    </List.Root>
-                </Box>
-                <Button colorPalette="blue" variant="subtle" onClick={handleSubmit}
-                        disabled={submitting}>Submit</Button>
-                {submitting ? (<>
-                    <Text>Submitting your translations...</Text>
-                    <Spinner/>
-                </>) : null}
+    if (gettingSentences) {
+        return (
+            <Box py={12} textAlign="center">
+                <Spinner colorPalette="teal" size="lg" mb={3}/>
+                <Text color="gray.500">Getting sentences for translation...</Text>
+            </Box>
+        );
+    }
 
-                <DialogRoot open={confirmOpen} onOpenChange={(e) => setConfirmOpen(e.open)}>
+    return (
+        <VStack gap={4} align="stretch">
+            <Text color="gray.600" fontSize="sm">
+                Translate the following sentences into Chinese using the correct translation of the <Text as="span" color="teal.600" fontWeight="bold">highlighted word</Text>.
+            </Text>
+
+            {sentences.map((sentence, index) => (
+                <Box
+                    key={index}
+                    bg="white"
+                    p={4}
+                    borderWidth="1px"
+                    borderColor="gray.200"
+                    borderRadius="lg"
+                    boxShadow="sm"
+                >
+                    <Text fontWeight="medium" mb={2} fontSize="sm" color="gray.500">
+                        {index + 1}.
+                    </Text>
+                    <Text mb={3}>{renderSentence(sentence)}</Text>
+                    <Input
+                        placeholder="Your translation..."
+                        value={translations[index]}
+                        onChange={(e) => handleInputChange(index, e.target.value)}
+                    />
+                </Box>
+            ))}
+
+            <Box pt={2}>
+                <Button colorPalette="teal" onClick={handleSubmit} disabled={submitting} w={{base: "full", md: "auto"}}>
+                    {submitting ? <><Spinner size="sm" mr={2}/>Submitting...</> : "Submit"}
+                </Button>
+            </Box>
+
+            <DialogRoot open={confirmOpen} onOpenChange={(e) => setConfirmOpen(e.open)}>
+                <DialogBackdrop/>
+                <DialogPositioner>
                     <DialogContent>
                         <DialogHeader>
                             <DialogTitle>Incomplete translations</DialogTitle>
@@ -121,11 +150,14 @@ export function PracticePage({onReview}) {
                             <DialogActionTrigger asChild>
                                 <Button variant="outline">Go back</Button>
                             </DialogActionTrigger>
-                            <Button colorPalette="blue" onClick={() => { setConfirmOpen(false); doSubmit(); }}>Submit</Button>
+                            <Button colorPalette="teal" onClick={() => {
+                                setConfirmOpen(false);
+                                doSubmit();
+                            }}>Submit</Button>
                         </DialogFooter>
                     </DialogContent>
-                </DialogRoot>
-            </>)
-            }
-        </>);
+                </DialogPositioner>
+            </DialogRoot>
+        </VStack>
+    );
 }

@@ -34,14 +34,15 @@ function App() {
     return (
         <Authenticator signUpAttributes={["email"]}>
             {({signOut, user}) => (
-                <Box className="centered" p={4}>
+                <Box bg="gray.50" minH="100vh" display="flex" flexDirection="column">
                     <Header user={user} signOut={signOut}/>
-
-                    <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/vocabulary" element={<VocabularyPage/>}/>
-                        <Route path="/practice" element={<Practice/>}/>
-                    </Routes>
+                    <Box maxW="800px" mx="auto" w="full" px={{base: 4, md: 6}} py={6} flex="1">
+                        <Routes>
+                            <Route path="/" element={<Home/>}/>
+                            <Route path="/vocabulary" element={<VocabularyPage/>}/>
+                            <Route path="/practice" element={<Practice/>}/>
+                        </Routes>
+                    </Box>
                 </Box>
             )}
         </Authenticator>
