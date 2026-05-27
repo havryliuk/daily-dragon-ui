@@ -23,10 +23,10 @@ jest.mock('../../../services/ai/aiService.js', () => ({
   ]))
 }));
 
-function renderPracticePage(onReview = jest.fn()) {
+function renderPracticePage(onReview = jest.fn(), hskLevel = undefined) {
   return render(
     <ChakraProvider value={defaultSystem}>
-      <PracticePage onReview={onReview} />
+      <PracticePage onReview={onReview} hskLevel={hskLevel} />
     </ChakraProvider>
   );
 }
@@ -71,6 +71,15 @@ test('practice flow: fetch sentences, enter translations, submit and call onRevi
   expect(Array.isArray(reviews)).toBe(true);
   expect(reviews[0]).toHaveProperty('word', '喜欢');
   expect(reviews[0]).toHaveProperty('quality', 10);
+});
+
+test('passes hsk_level to getPracticeSentences when provided', async () => {
+  renderPracticePage(jest.fn(), 3);
+
+  await waitForSentences();
+
+  const { getPracticeSentences } = require('../../../services/ai/aiService.js');
+  expect(getPracticeSentences).toHaveBeenCalledWith(expect.any(Array), 3);
 });
 
 test('submit button is enabled when translations are empty', async () => {

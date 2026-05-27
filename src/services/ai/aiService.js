@@ -1,18 +1,18 @@
-import {EVALUATE_TRANSLATIONS_PROMPT} from "./prompts.js";
 import {DAILY_DRAGON_API_BASE_URL} from "../../config.js";
 import {getToken} from "../auth.js";
 
 const PRACTICE_OPENAI_API_URL = DAILY_DRAGON_API_BASE_URL + "/practice";
 
 
-export async function getPracticeSentences(words) {
+export async function getPracticeSentences(words, hskLevel) {
+    const body = hskLevel != null ? {words, hsk_level: hskLevel} : {words};
     const response = await fetch(PRACTICE_OPENAI_API_URL + "/sentences", {
         method: "POST",
         headers: {
             "Authorization": "Bearer " + await getToken(),
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({words})
+        body: JSON.stringify(body)
     });
 
     if (!response.ok) {
@@ -43,7 +43,7 @@ export async function submitTranslations(input) {
                 translation: input.translations[i]
             }));
         } else {
-            translationsArray = input.translations.map(t => ({ translation: t }));
+            translationsArray = input.translations.map(t => ({translation: t}));
         }
     } else {
         throw new Error('Invalid input for submitTranslations');
@@ -55,7 +55,7 @@ export async function submitTranslations(input) {
             "Authorization": "Bearer " + await getToken(),
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ translations: translationsArray })
+        body: JSON.stringify({translations: translationsArray})
     });
 
     if (!response.ok) {

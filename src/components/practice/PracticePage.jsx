@@ -7,18 +7,9 @@ import {
 import {getDueVocabulary, submitReviews} from "../../services/vocabularyService.js";
 import {useState, useEffect} from "react";
 import {getPracticeSentences, submitTranslations} from "../../services/ai/aiService.js";
+import {renderSentence} from "./renderSentence.jsx";
 
-function renderSentence(sentence) {
-    return sentence.split(/(<[^>]+>)/).map((part, i) => {
-        const match = part.match(/^<(.+)>$/);
-        if (match) {
-            return <Text as="span" key={i} color="teal.600" fontWeight="bold">{match[1]}</Text>;
-        }
-        return part;
-    });
-}
-
-export function PracticePage({onReview}) {
+export function PracticePage({onReview, hskLevel}) {
     const [gettingSentences, setGettingSentences] = useState(true);
     const [words, setWords] = useState([]);
     const [sentences, setSentences] = useState([]);
@@ -31,7 +22,7 @@ export function PracticePage({onReview}) {
             const words = await getDueVocabulary();
             setWords(words);
 
-            let sentencesResult = await getPracticeSentences(words);
+            let sentencesResult = await getPracticeSentences(words, hskLevel);
 
             if (typeof sentencesResult === 'string') {
                 try {

@@ -10,7 +10,7 @@ const STATES = {
     REVIEW: 'REVIEW'
 }
 
-export default function Practice() {
+export default function Practice({hskLevel}) {
     const [state, setState] = useState(STATES.WELCOME);
     const [reviewResult, setReviewResult] = useState(null);
 
@@ -30,7 +30,7 @@ export default function Practice() {
 
     return <Box>
         {state === STATES.WELCOME && <WelcomePage onStart={startPractice}/>}
-        {state === STATES.IN_PROGRESS && <PracticePage onReview={goToReview}/>}
+        {state === STATES.IN_PROGRESS && <PracticePage onReview={goToReview} hskLevel={hskLevel}/>}
         {state === STATES.REVIEW && <ReviewPage onFinish={finishPractice} onPracticeAgain={practiceAgain} review={reviewResult}/>}
     </Box>
 }

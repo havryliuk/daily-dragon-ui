@@ -2,6 +2,7 @@ import {
     Box, Button, Text, SimpleGrid, HStack, VStack,
     Card, Stat, Badge, ProgressCircle, Alert, Separator
 } from "@chakra-ui/react";
+import {renderSentence} from "./renderSentence.jsx";
 
 const scoreColor = (score) => {
     if (score >= 8) return "green";
@@ -74,7 +75,7 @@ export default ({review, onFinish, onPracticeAgain}) => {
                         </Card.Header>
 
                         <Card.Body gap={3}>
-                            <Text fontSize="sm" color="gray.600" fontStyle="italic">{r.originalSentence}</Text>
+                            <Text fontSize="sm" color="gray.600" fontStyle="italic">{renderSentence(r.originalSentence)}</Text>
 
                             <Separator/>
 
@@ -86,7 +87,7 @@ export default ({review, onFinish, onPracticeAgain}) => {
                             {r.correctSentence && (
                                 <Box p={2} bg="green.subtle" borderRadius="md">
                                     <Text fontSize="xs" color="green.fg" fontWeight="semibold" mb={1}>Correct sentence</Text>
-                                    <Text fontSize="sm">{r.correctSentence}</Text>
+                                    <Text fontSize="sm">{renderSentence(r.correctSentence)}</Text>
                                 </Box>
                             )}
 
