@@ -15,17 +15,15 @@ const HSK_LEVEL_NAMES = {
     7: "Mastery",
 };
 
-function ProgressBar({value, max, colorScheme = "teal"}) {
-    const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+function ProgressBar({mastered, inProgress, newCount, total}) {
+    const masteredPct = total > 0 ? (mastered / total) * 100 : 0;
+    const inProgressPct = total > 0 ? (inProgress / total) * 100 : 0;
+    const newPct = total > 0 ? (newCount / total) * 100 : 0;
     return (
-        <Box w="full" bg="gray.100" borderRadius="full" h="8px" overflow="hidden">
-            <Box
-                h="full"
-                borderRadius="full"
-                bg={`${colorScheme}.400`}
-                w={`${pct}%`}
-                transition="width 0.4s ease"
-            />
+        <Box w="full" bg="gray.100" borderRadius="full" h="8px" overflow="hidden" display="flex">
+            <Box h="full" bg="teal.400" w={`${masteredPct}%`} transition="width 0.4s ease" flexShrink={0}/>
+            <Box h="full" bg="orange.300" w={`${inProgressPct}%`} transition="width 0.4s ease" flexShrink={0}/>
+            <Box h="full" bg="gray.300" w={`${newPct}%`} transition="width 0.4s ease" flexShrink={0}/>
         </Box>
     );
 }
@@ -57,7 +55,7 @@ function LevelCard({level, progress, isCurrent}) {
                 </HStack>
             </HStack>
 
-            <ProgressBar value={mastered} max={total}/>
+            <ProgressBar mastered={mastered} inProgress={in_progress} newCount={newCount} total={total}/>
 
             <HStack gap={4} mt={3} fontSize="xs" color="gray.500">
                 <Text><Text as="span" fontWeight="semibold" color="teal.700">{mastered}</Text> mastered</Text>
