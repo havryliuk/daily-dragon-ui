@@ -8,9 +8,32 @@ import {getDueVocabulary, submitReviews} from "../../services/vocabularyService.
 import {useState, useEffect} from "react";
 import {getPracticeSentences, submitTranslations} from "../../services/ai/aiService.js";
 import {renderSentence} from "./renderSentence.jsx";
+import {toaster} from "../ui/toaster.jsx";
+
+async function fetchAndParseSentences(words, hskLevel) {
+    let result = await getPracticeSentences(words, hskLevel);
+
+    if (typeof result === 'string') {
+        try { result = JSON.parse(result); } catch (e) { console.error('Failed to parse sentences response:', e); }
+    }
+
+    if (Array.isArray(result)) {
+        return {sentences: result, words};
+    }
+
+    if (result && Array.isArray(result.sentences)) {
+        const sentences = result.sentences.map(s => s.sentence || s);
+        const orderedWords = result.sentences.map(s => s.word).filter(Boolean);
+        return {sentences, words: orderedWords.length === sentences.length ? orderedWords : words};
+    }
+
+    return {sentences: [], words};
+}
 
 export function PracticePage({onReview, hskLevel}) {
     const [gettingSentences, setGettingSentences] = useState(true);
+    const [loadError, setLoadError] = useState(null);
+    const [retryCount, setRetryCount] = useState(0);
     const [words, setWords] = useState([]);
     const [sentences, setSentences] = useState([]);
     const [translations, setTranslations] = useState([]);
@@ -18,37 +41,24 @@ export function PracticePage({onReview, hskLevel}) {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     useEffect(() => {
-        (async () => {
-            const words = await getDueVocabulary();
-            setWords(words);
+        setGettingSentences(true);
+        setLoadError(null);
+        loadPractice();
 
-            let sentencesResult = await getPracticeSentences(words, hskLevel);
-
-            if (typeof sentencesResult === 'string') {
-                try {
-                    sentencesResult = JSON.parse(sentencesResult);
-                } catch (e) {
-                    console.error('Failed to parse sentences response:', e);
-                }
+        async function loadPractice() {
+            try {
+                const words = await getDueVocabulary();
+                const {sentences, words: orderedWords} = await fetchAndParseSentences(words, hskLevel);
+                setWords(orderedWords);
+                setSentences(sentences);
+                setTranslations(Array(sentences.length).fill(""));
+            } catch (e) {
+                setLoadError('Failed to load practice sentences. Please try again.');
+            } finally {
+                setGettingSentences(false);
             }
-
-            let sentencesArray = [];
-            if (Array.isArray(sentencesResult)) {
-                sentencesArray = sentencesResult;
-            } else if (sentencesResult && Array.isArray(sentencesResult.sentences)) {
-                sentencesArray = sentencesResult.sentences.map(s => s.sentence || s);
-
-                const returnedWords = sentencesResult.sentences.map(s => s.word).filter(Boolean);
-                if (returnedWords.length === sentencesArray.length) {
-                    setWords(returnedWords);
-                }
-            }
-
-            setSentences(sentencesArray);
-            setTranslations(Array(sentencesArray.length).fill(""));
-            setGettingSentences(false);
-        })();
-    }, []);
+        }
+    }, [retryCount]);
 
     const handleInputChange = (index, value) => {
         setTranslations((prev) => {
@@ -71,6 +81,13 @@ export function PracticePage({onReview, hskLevel}) {
             const review = await submitTranslations({translations: payload});
             await submitReviews(review.map(r => ({word: r.targetWord, quality: r.score})));
             onReview(review);
+        } catch (e) {
+            toaster.create({
+                title: 'Submission failed',
+                description: 'Could not submit translations. Please try again.',
+                type: 'error',
+                closable: true,
+            });
         } finally {
             setSubmitting(false);
         }
@@ -89,6 +106,15 @@ export function PracticePage({onReview, hskLevel}) {
             <Box py={12} textAlign="center">
                 <Spinner colorPalette="teal" size="lg" mb={3}/>
                 <Text color="gray.500">Getting sentences for translation...</Text>
+            </Box>
+        );
+    }
+
+    if (loadError) {
+        return (
+            <Box py={12} textAlign="center">
+                <Text color="red.500" mb={4}>{loadError}</Text>
+                <Button colorPalette="teal" onClick={() => setRetryCount(c => c + 1)}>Try again</Button>
             </Box>
         );
     }

@@ -3,6 +3,10 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { PracticePage } from '../../../components/practice/PracticePage.jsx';
 
+jest.mock('../../../components/ui/toaster.jsx', () => ({
+  toaster: { create: jest.fn() },
+}));
+
 jest.mock('../../../services/vocabularyService.js', () => ({
   getDueVocabulary: jest.fn(() => Promise.resolve(['喜欢', '喝', '学', '完成', '等'])),
   submitReviews: jest.fn(() => Promise.resolve())
@@ -139,4 +143,66 @@ test('confirm submit in dialog submits with empty translations and calls onRevie
   fireEvent.click(within(dialog).getByRole('button', { name: /submit/i }));
 
   await waitFor(() => expect(onReview).toHaveBeenCalled());
+});
+
+test('shows error message and hides spinner when getDueVocabulary fails', async () => {
+  const { getDueVocabulary } = require('../../../services/vocabularyService.js');
+  getDueVocabulary.mockRejectedValueOnce(new Error('Network error'));
+
+  renderPracticePage();
+
+  await waitFor(() =>
+    expect(screen.getByText(/failed to load practice sentences/i)).toBeInTheDocument()
+  );
+  expect(screen.queryByText(/getting sentences/i)).not.toBeInTheDocument();
+});
+
+test('shows error message and hides spinner when getPracticeSentences fails', async () => {
+  const { getDueVocabulary } = require('../../../services/vocabularyService.js');
+  const { getPracticeSentences } = require('../../../services/ai/aiService.js');
+  getDueVocabulary.mockResolvedValueOnce(['喜欢']);
+  getPracticeSentences.mockRejectedValueOnce(new Error('AI error'));
+
+  renderPracticePage();
+
+  await waitFor(() =>
+    expect(screen.getByText(/failed to load practice sentences/i)).toBeInTheDocument()
+  );
+  expect(screen.queryByText(/getting sentences/i)).not.toBeInTheDocument();
+});
+
+test('retry button re-fetches sentences after load error', async () => {
+  const { getDueVocabulary } = require('../../../services/vocabularyService.js');
+  getDueVocabulary
+    .mockRejectedValueOnce(new Error('Network error'))
+    .mockResolvedValueOnce(['喜欢', '喝', '学', '完成', '等']);
+
+  renderPracticePage();
+
+  await waitFor(() =>
+    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument()
+  );
+
+  fireEvent.click(screen.getByRole('button', { name: /try again/i }));
+
+  await waitForSentences();
+  expect(screen.queryByText(/failed to load/i)).not.toBeInTheDocument();
+});
+
+test('shows error toast when doSubmit fails', async () => {
+  const { submitTranslations } = require('../../../services/ai/aiService.js');
+  submitTranslations.mockRejectedValueOnce(new Error('Submit error'));
+
+  const { toaster } = require('../../../components/ui/toaster.jsx');
+  renderPracticePage();
+
+  await waitForSentences();
+
+  const inputs = screen.getAllByRole('textbox');
+  inputs.forEach((input, i) => fireEvent.change(input, { target: { value: `T${i}` } }));
+  fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+
+  await waitFor(() => expect(toaster.create).toHaveBeenCalledWith(
+    expect.objectContaining({ type: 'error', title: 'Submission failed' })
+  ));
 });
