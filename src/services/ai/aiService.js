@@ -62,17 +62,8 @@ export async function submitTranslations(input) {
         throw new Error(`API error: ${response.statusText}`);
     }
 
-    let result = await response.json();
-    if (typeof result === 'string') {
-        try {
-            result = JSON.parse(result);
-        } catch (e) {
-            console.error('Failed to parse submitTranslations response:', e);
-            throw e;
-        }
-    }
-
-    const evaluations = Array.isArray(result.evaluations) ? result.evaluations : (Array.isArray(result) ? result : []);
+    const result = await response.json();
+    const evaluations = Array.isArray(result.evaluations) ? result.evaluations : [];
 
     return evaluations.map(ev => ({
         originalSentence: ev.sentence,

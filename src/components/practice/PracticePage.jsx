@@ -11,15 +11,7 @@ import {renderSentence} from "./renderSentence.jsx";
 import {toaster} from "../ui/toaster.jsx";
 
 async function fetchAndParseSentences(words, hskLevel) {
-    let result = await getPracticeSentences(words, hskLevel);
-
-    if (typeof result === 'string') {
-        try { result = JSON.parse(result); } catch (e) { console.error('Failed to parse sentences response:', e); }
-    }
-
-    if (Array.isArray(result)) {
-        return {sentences: result, words};
-    }
+    const result = await getPracticeSentences(words, hskLevel);
 
     if (result && Array.isArray(result.sentences)) {
         const sentences = result.sentences.map(s => s.sentence || s);

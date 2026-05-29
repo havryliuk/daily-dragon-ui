@@ -78,30 +78,6 @@ describe('aiService.submitTranslations', () => {
     expect(requestBody.translations[0]).toEqual({ word: '喜', sentence: 'S1', translation: 'T1' });
   });
 
-  test('parses string response payload', async () => {
-    const fakeEvaluations = {
-      evaluations: [
-        { sentence: 'Hello', translation: '你好', target_word: '你好', word_used: '你好', feedback: 'ok', correct_sentence: '', score: 5 }
-      ]
-    };
-
-    // server returns a JSON string (stringified JSON)
-    global.fetch.mockResolvedValueOnce({ ok: true, json: async () => JSON.stringify(fakeEvaluations) });
-
-    const payload = [ { word: '你好', sentence: 'Hello', translation: '你好' } ];
-    const result = await submitTranslations({ translations: payload });
-
-    expect(result[0].originalSentence).toBe('Hello');
-    expect(global.fetch).toHaveBeenCalledTimes(1);
-  });
-
-  test('throws when server returns invalid JSON string', async () => {
-    global.fetch.mockResolvedValueOnce({ ok: true, json: async () => 'not-a-json' });
-
-    const payload = [ { word: 'x', sentence: 'S', translation: 'T' } ];
-    await expect(submitTranslations({ translations: payload })).rejects.toThrow();
-  });
-
   test('throws when submitTranslations response.ok is false', async () => {
     global.fetch.mockResolvedValueOnce({ ok: false, statusText: 'Bad' });
 
@@ -131,13 +107,6 @@ describe('aiService.submitTranslations', () => {
     expect(requestBody.translations[0]).toEqual({ translation: 'X' });
   });
 
-  test('accepts server response as plain array', async () => {
-    const evals = [ { sentence: 'S', translation: 'T', target_word: 'w', word_used: 'w', feedback: 'f', correct_sentence: '', score: 1 } ];
-    global.fetch.mockResolvedValueOnce({ ok: true, json: async () => evals });
-    const payload = [ { word: 'w', sentence: 'S', translation: 'T' } ];
-    const result = await submitTranslations({ translations: payload });
-    expect(result[0].originalSentence).toBe('S');
-  });
 });
 
 describe('aiService.getPracticeSentences', () => {
