@@ -1,6 +1,6 @@
 import {Box, Heading, SimpleGrid, Text, VStack} from "@chakra-ui/react";
 import {Link} from "react-router-dom";
-import {FiBarChart2, FiEdit} from "react-icons/fi";
+import {FiBarChart2, FiEdit, FiBook} from "react-icons/fi";
 
 export default function Home() {
     return (
@@ -44,6 +44,25 @@ export default function Home() {
                             <Box color="teal.500" fontSize="2xl"><FiEdit/></Box>
                             <Text fontWeight="semibold" fontSize="lg">Practice</Text>
                             <Text fontSize="sm" color="gray.500">Translate sentences with your words</Text>
+                        </VStack>
+                    </Box>
+                </Link>
+                <Link to="/learning" style={{textDecoration: "none"}}>
+                    <Box
+                        p={6}
+                        bg="white"
+                        borderWidth="1px"
+                        borderColor="gray.200"
+                        borderRadius="xl"
+                        boxShadow="sm"
+                        _hover={{boxShadow: "md", borderColor: "teal.300"}}
+                        transition="all 0.15s"
+                        cursor="pointer"
+                    >
+                        <VStack align="flex-start" gap={2}>
+                            <Box color="teal.500" fontSize="2xl"><FiBook/></Box>
+                            <Text fontWeight="semibold" fontSize="lg">Learn</Text>
+                            <Text fontSize="sm" color="gray.500">Study your due words before practicing</Text>
                         </VStack>
                     </Box>
                 </Link>
