@@ -2,6 +2,7 @@ import {DAILY_DRAGON_API_BASE_URL} from "../../config.js";
 import {getToken} from "../auth.js";
 
 const PRACTICE_OPENAI_API_URL = DAILY_DRAGON_API_BASE_URL + "/practice";
+const LEARNING_API_URL = DAILY_DRAGON_API_BASE_URL + "/learning";
 
 
 export async function getPracticeSentences(words, hskLevel) {
@@ -49,7 +50,7 @@ export async function submitTranslations(input) {
         throw new Error('Invalid input for submitTranslations');
     }
 
-    const response = await fetch(PRACTICE_OPENAI_API_URL + "/evaluate-translations", {
+    const response = await fetch(PRACTICE_OPENABI_API_URL + "/evaluate-translations", {
         method: "POST",
         headers: {
             "Authorization": "Bearer " + await getToken(),
@@ -75,4 +76,22 @@ export async function submitTranslations(input) {
         correctSentence: ev.correct_sentence,
         score: ev.score
     }));
+}
+
+export async function getWordCards(words, hskLevel) {
+    const body = hskLevel != null ? {words, hsk_level: hskLevel} : {words};
+    const response = await fetch(LEARNING_API_URL + "/word-cards", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + await getToken(),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+        throw new Error(`API error: ${response.statusText}`);
+    }
+
+    return await response.json();
 }
