@@ -9,49 +9,47 @@ export default function WordCard({card}) {
             borderRadius="xl"
             boxShadow="sm"
             p={8}
-            minH="320px"
         >
-            <VStack gap={5} align="stretch">
-                {/* Character */}
-                <Text fontSize="6ql" fontWeight="bold" textAlign="center" lineHeight="1.2">
-                    {card.word}
-                </Text>
+            <VStack gap={6} align="stretch">
+                <VStack gap={2} align="center" py={4}>
+                    <Text fontSize="7xl" fontWeight="bold" lineHeight="1" textAlign="center">
+                        {card.word}
+                    </Text>
+                    <Text fontSize="lg" color="gray.500" textAlign="center">
+                        {card.pinyin}
+                    </Text>
+                </VStack>
 
-                {/* Pinyin */}
-                <Text fontSize="xl" color="purple.500" textAlign="center">
-                    {card.pinyin}
-                </Text>
+                <Separator/>
 
-                {/* Meanings */}
                 <Box>
-                    <Text fontSize="xs" fontWeight="semibold" color="gray.500" textTransform="uppercase" mb={2}>
+                    <Text fontSize="xs" fontWeight="semibold" color="gray.400" textTransform="uppercase" letterSpacing="wider" mb={2}>
                         Meaning
                     </Text>
                     <VStack align="flex-start" gap={1}>
                         {card.meanings.map((meaning, i) => (
-                            <Text key={i} fontSize="md">
+                            <Text key={i} fontSize="md" color="gray.700">
                                 {i + 1}. {meaning}
                             </Text>
                         ))}
                     </VStack>
                 </Box>
 
-                <Separator/>
-
-                {/* Example sentences */}
-                <Box>
-                    <Text fontSize="xs" fontWeight="semibold" color="gray.500" textTransform="uppercase" mb={2}>
-                        Examples
-                    </Text>
-                    <VStack gap={3} align="stretch">
-                        {card.examples.map((example, i) => (
-                            <Box key={i}>
-                                <Text fontSize="md">{example.chinese}</Text>
-                                <Text fontSize="sm" color="gray.500" ml={4}>{example.english}</Text>
-                            </Box>
-                        ))}
-                    </VStack>
-                </Box>
+                {card.examples?.length > 0 && (
+                    <Box>
+                        <Text fontSize="xs" fontWeight="semibold" color="gray.400" textTransform="uppercase" letterSpacing="wider" mb={2}>
+                            Examples
+                        </Text>
+                        <VStack gap={3} align="stretch">
+                            {card.examples.map((example, i) => (
+                                <Box key={i}>
+                                    <Text fontSize="md">{example.chinese}</Text>
+                                    <Text fontSize="sm" color="gray.500" mt={1}>{example.english}</Text>
+                                </Box>
+                            ))}
+                        </VStack>
+                    </Box>
+                )}
             </VStack>
         </Box>
     );

@@ -1,4 +1,4 @@
-import {Box, Button, HStack, Text} from "@chakra-ui/react";
+import {Box, Button, HStack, Text, VStack} from "@chakra-ui/react";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
@@ -12,69 +12,43 @@ export default function LearningCarousel({cards}) {
     const isFirst = currentIndex === 0;
     const isLast = currentIndex === total - 1;
 
-    const goPrev = () => setCurrentIndex(i => i - 1);
-    const goNext = () => setCurrentIndex(i => i + 1);
-
     return (
-        <Box>
-            {/* Card */}
-            <WordCard card={cards[currentIndex]} />
+        <VStack gap={6} align="stretch">
+            <Text fontSize="sm" color="gray.500" textAlign="center" fontWeight="medium">
+                {currentIndex + 1} of {total}
+            </Text>
 
-            {/* Navigation bar */}
-            <HStack justify="space-between" align="center" mt={6}>
-                {/* Back to home - always visible on the left */}
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    colorPalette="teal"
-                    onClick={() => navigate("/")}
-                >
-                    <FiArrowLeft/> Back
-                </Button>
+            <WordCard card={cards[currentIndex]}/>
 
-                {/* Card counter */}
-                <HStack gap={2} align="center">
-                    {isFirst ? null : (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            colorPalette="gray"
-                            onClick={goPrev}
-                            aria-label="Previous card"
-                        >
-                            <FiArrowLeft/>
-                        </Button>
-                    )}
-                    <Text fontSize="sm" color="gray.600" minW="48px">
-                        {currentIndex + 1} / {total}
-                    </Text>
-                    {isLast ? null : (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            colorPalette="gray"
-                            onClick={goNext}
-                            aria-label="Next card"
-                        >
-                            <FiArrowRight/>
-                        </Button>
-                    )}
-                </HStack>
-
-                {/* Practice button - only on the last card */}
-                {isLast ? (
+            <HStack justify="space-between" align="center">
+                {isFirst ? (
+                    <Box/>
+                ) : (
                     <Button
-                        colorPalette="teal"
+                        variant="ghost"
                         size="sm"
-                        onClick={() => navigate("/practice")}
+                        colorPalette="teal"
+                        onClick={() => setCurrentIndex(i => i - 1)}
                     >
-                        Practice these words now
+                        <FiArrowLeft/> Previous
+                    </Button>
+                )}
+
+                {isLast ? (
+                    <Button colorPalette="teal" onClick={() => navigate("/practice")}>
+                        Practice these words
                     </Button>
                 ) : (
-                    {/* Spacer so layout does not shift on non-last cards */}
-                    <Box w="48px" />
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        colorPalette="teal"
+                        onClick={() => setCurrentIndex(i => i + 1)}
+                    >
+                        Next <FiArrowRight/>
+                    </Button>
                 )}
             </HStack>
-        </Box>
+        </VStack>
     );
 }

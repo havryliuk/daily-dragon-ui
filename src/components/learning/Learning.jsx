@@ -25,7 +25,7 @@ export default function Learning({hskLevel}) {
             const words = await getDueVocabulary();
             const result = await getWordCards(words, hskLevel);
             setCards(result.cards);
-            setState(STATES.STUDYANGE);
+            setState(STATES.STUDYING);
         } catch (err) {
             setErrorMsg(err.message || "Something went wrong.");
             setState(STATES.ERROR);
@@ -36,33 +36,37 @@ export default function Learning({hskLevel}) {
         loadCards();
     }, []);
 
-    if (state === STATES,¥ÏAD	GI) {
+    if (state === STATES.LOADING) {
         return (
-            <VStack gap={4} align="center" mt={16}>
-                <Spinner size="xl" color="teal.500"/>
-                <Text color="gray.500">Preparing your word cards...</Text>
-            </VStack>
+            <Box py={12} textAlign="center">
+                <Spinner size="lg" colorPalette="teal"/>
+                <Text mt={4} color="gray.500">Preparing your word cards...</Text>
+            </Box>
         );
     }
 
     if (state === STATES.ERROR) {
         return (
-            <VStack gap={4} align="center" mt={16}>
-                <Text color="red.500">{errorMsg}</Text>
-                <Button colorPalette="teal" onClick={loadCards}>Try again</Button>
-                <Button variant="ghost" size="sm" colorPalette="teal" onClick={() => navigate("/")}>
-                    <FiArrowLeft/> Back
-                </Button>
-            </VStack>
+            <Box py={12} textAlign="center">
+                <VStack gap={4} align="center">
+                    <Text color="red.500">{errorMsg}</Text>
+                    <Button colorPalette="teal" onClick={loadCards}>Try again</Button>
+                    <Button variant="ghost" size="sm" colorPalette="teal" onClick={() => navigate("/")}>
+                        <FiArrowLeft/> Back
+                    </Button>
+                </VStack>
+            </Box>
         );
     }
 
     return (
-        <>
-            <Button variant="ghost" size="sm" colorPalette="teal" mb={4} onClick={() => navigate("/")}>
-                <FiArrowLeft/> Home
-            </Button>
-            <LearningCarousel cards={cards} />
-        </>
+        <VStack gap={6} align="stretch">
+            <Box>
+                <Button variant="ghost" size="sm" colorPalette="teal" onClick={() => navigate("/")}>
+                    <FiArrowLeft/> Home
+                </Button>
+            </Box>
+            <LearningCarousel cards={cards}/>
+        </VStack>
     );
 }
