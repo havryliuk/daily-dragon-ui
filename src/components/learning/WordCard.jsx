@@ -1,3 +1,4 @@
+import React from 'react';
 import {Box, Separator, Text, VStack} from "@chakra-ui/react";
 
 export default function WordCard({card}) {

@@ -1,6 +1,6 @@
-import {getWordCards} from '../../../../services/ai/aiService.js';
+import {getWordCards} from '../../../services/ai/aiService.js';
 
-jest.mock('../../../../services/auth.js', () => ({
+jest.mock('../../../services/auth.js', () => ({
     getToken: jest.fn(() => Promise.resolve('test-token')),
 }));
 
@@ -10,7 +10,7 @@ describe('aiService.getWordCards', () => {
     });
 
     afterEach(() => {
-        jest.resetAllMocks();
+        jest.clearAllMocks();
         delete global.fetch;
     });
 

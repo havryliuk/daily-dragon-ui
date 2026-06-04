@@ -50,7 +50,7 @@ export async function submitTranslations(input) {
         throw new Error('Invalid input for submitTranslations');
     }
 
-    const response = await fetch(PRACTICE_OPENABI_API_URL + "/evaluate-translations", {
+    const response = await fetch(PRACTICE_OPENAI_API_URL + "/evaluate-translations", {
         method: "POST",
         headers: {
             "Authorization": "Bearer " + await getToken(),

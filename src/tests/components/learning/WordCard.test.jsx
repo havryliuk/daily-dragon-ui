@@ -1,6 +1,7 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import WordCard from '../../../../components/learning/WordCard.jsx';
+import {ChakraProvider, defaultSystem} from '@chakra-ui/react';
+import WordCard from '../../../components/learning/WordCard.jsx';
 
 const makeCard = (overrides = {}) => ({
     word: 'TestWord',
@@ -13,25 +14,27 @@ const makeCard = (overrides = {}) => ({
     ...overrides,
 });
 
+const wrap = (ui) => <ChakraProvider value={defaultSystem}>{ui}</ChakraProvider>;
+
 describe('WordCard', () => {
     test('renders the word', () => {
-        render(<WordCard card={makeCard()} />);
+        render(wrap(<WordCard card={makeCard()} />));
         expect(screen.getByText('TestWord')).toBeInTheDocument();
     });
 
     test('renders the pinyin', () => {
-        render(<WordCard card={makeCard()} />);
+        render(wrap(<WordCard card={makeCard()} />));
         expect(screen.getByText('testpin')).toBeInTheDocument();
     });
 
     test('renders all meanings', () => {
-        render(<WordCard card={makeCard()} />);
+        render(wrap(<WordCard card={makeCard()} />));
         expect(screen.getByText(/1. first meaning/i)).toBeInTheDocument();
         expect(screen.getByText(/2. second meaning/i)).toBeInTheDocument();
     });
 
     test('renders example sentences and translations', () => {
-        render(<WordCard card={makeCard()} />);
+        render(wrap(<WordCard card={makeCard()} />));
         expect(screen.getByText('ExampleSentence1')).toBeInTheDocument();
         expect(screen.getByText('English translation 1')).toBeInTheDocument();
         expect(screen.getByText('ExampleSentence2')).toBeInTheDocument();
@@ -39,8 +42,8 @@ describe('WordCard', () => {
     });
 
     test('renders section headers', () => {
-        render(<WordCard card={makeCard()} />);
-        expect(screen.getByText(/meaning/i)).toBeInTheDocument();
-        expect(screen.getByText(/examples/i)).toBeInTheDocument();
+        render(wrap(<WordCard card={makeCard()} />));
+        expect(screen.getByText('Meaning')).toBeInTheDocument();
+        expect(screen.getByText('Examples')).toBeInTheDocument();
     });
 });

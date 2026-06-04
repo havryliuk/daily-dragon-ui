@@ -1,3 +1,4 @@
+import React from 'react';
 import {Box, Button, HStack, Text, VStack} from "@chakra-ui/react";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -14,9 +15,15 @@ export default function LearningCarousel({cards}) {
 
     return (
         <VStack gap={6} align="stretch">
-            <Text fontSize="sm" color="gray.500" textAlign="center" fontWeight="medium">
-                {currentIndex + 1} of {total}
-            </Text>
+            <HStack justify="space-between" align="center">
+                <Button variant="ghost" size="sm" colorPalette="gray" onClick={() => navigate("/learning")}>
+                    Back
+                </Button>
+                <Text fontSize="sm" color="gray.500" fontWeight="medium">
+                    {currentIndex + 1} / {total}
+                </Text>
+                <Box w="60px"/>
+            </HStack>
 
             <WordCard card={cards[currentIndex]}/>
 
@@ -28,6 +35,7 @@ export default function LearningCarousel({cards}) {
                         variant="ghost"
                         size="sm"
                         colorPalette="teal"
+                        aria-label="Previous card"
                         onClick={() => setCurrentIndex(i => i - 1)}
                     >
                         <FiArrowLeft/> Previous
@@ -36,13 +44,14 @@ export default function LearningCarousel({cards}) {
 
                 {isLast ? (
                     <Button colorPalette="teal" onClick={() => navigate("/practice")}>
-                        Practice these words
+                        Practice these words now
                     </Button>
                 ) : (
                     <Button
                         variant="ghost"
                         size="sm"
                         colorPalette="teal"
+                        aria-label="Next card"
                         onClick={() => setCurrentIndex(i => i + 1)}
                     >
                         Next <FiArrowRight/>
